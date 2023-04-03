@@ -1,15 +1,16 @@
-﻿using ToDoList.model;
+﻿using ToDoList.DTO;
+using ToDoList.model;
 
 namespace ToDoList.Services.DoneServices
 {
     public interface IDoneService
     {
-        public List<DoneItem> DoneItems { get; set; }
+        public List<DoneItemDto> DoneItemDtos { get; set; }
         Task GetDoneItems();
-        Task <DoneItem> GetDoneItem(int id);
+        Task <DoneItemDto> GetDoneItem(int id);
 
-        Task CreateDoneItem(DoneItem item);
-        Task UpdateDoneItem(DoneItem doneItem);
+        Task CreateDoneItem(DoneItemDto item);
+        Task UpdateDoneItem(ItemDto doneItem);
         Task DeleteDoneItem(int id);
     }
 }
