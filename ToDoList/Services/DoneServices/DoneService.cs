@@ -30,8 +30,8 @@ namespace ToDoList.Services.DoneServices
 
         public async Task CreateDoneItem(DoneItemDto item)
         {
-            var result = await _http.PostAsJsonAsync("api/done", item);
-            //TODO: move these to a common method to avoid duplication
+            var _item = _mapper.Map<DoneItem>(item);
+            var result = await _http.PostAsJsonAsync("api/done", _item);
             var res = await result.Content.ReadFromJsonAsync<List<DoneItem>>();
             if (res != null) DoneItemDtos = _mapper.Map<List<DoneItemDto>>(res);
         }

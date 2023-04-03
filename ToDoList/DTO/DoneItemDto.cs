@@ -5,5 +5,9 @@
         public DoneItemDto(string text) : base(text)
         {
         }
+
+        public DoneItemDto(string text, int id) : base(text, id)
+        {
+        }
     }
 }

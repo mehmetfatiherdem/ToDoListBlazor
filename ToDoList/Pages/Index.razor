@@ -6,116 +6,163 @@
 @inject IDoingService DoingService
 @inject IDoneService DoneService
 
+<style>
+    .list-section {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        height: 500px; /* adjust this value to fit your content */
+        margin: 0 20px;
+    }
+
+        .list-section h2 {
+            margin-bottom: 10px;
+        }
+
+        .list-section ul {
+            margin: 10px;
+            padding: 0;
+            list-style-type: none;
+            overflow-y: auto;
+            max-height: calc(100% - 90px); /* adjust this value to fit your content */
+        }
+
+        .list-section input {
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
+        .list-section button {
+            margin-top: 10px;
+        }
+</style>
+
+
 <PageTitle>Todo</PageTitle>
 
-<h1>Todo App</h1>
+<div style="display:flex; justify-content: center;">
+    <h1>Todo App</h1>
+</div>
 
-Welcome to your new app.
-<table>
+<div style="display:flex; justify-content: center;">
 
-    <tr>
-        <td style="padding: 20px;">
-            <h2>Yapacaklarım</h2>
-            <ul style="margin: 10px;">
-                @foreach (var item in ToDoService.ToDoItemDtos)
-                {
+    <table>
 
-                    <li style="margin-bottom: 5px;">
-                            <div>
-                                @item.Text
-                                <button class="btn btn-primary" @onclick="() => EditItem(item)"><i class="oi oi-pencil"></i></button>
-                                <button class="btn btn-danger" @onclick="() => DeleteItem(item)"><i class="oi oi-x"></i></button>
-                            
-                            </div>
-                        @if (item == editingItem)
+        <tr>
+            <td style="padding: 20px;">
+                <div class="list-section">
+                    <h2>Yapacaklarım</h2>
+                            <ul style="margin: 10px;">
+                            @foreach (var item in ToDoService.ToDoItemDtos)
                             {
-                                <div>
-                                    <input @bind="editingToDoText" />
-                                    <button @onclick="() => SaveItem(item)">Save</button>
-                                </div>
-                            }
+
+                                <li style="margin-bottom: 5px;">
+                                        <div>
+                                            @item.Text
+                                            <button class="btn btn-primary" @onclick="() => EditItem(item)"><i class="oi oi-pencil"></i></button>
+                                            <button class="btn btn-danger" @onclick="() => DeleteItem(item)"><i class="oi oi-x"></i></button>
+                            
+                                        </div>
+                                    @if (item == editingItem)
+                                        {
+                                            <div>
+                                                <input @bind="editingToDoText" />
+                                                <button @onclick="() => SaveItem(item)">Save</button>
+                                            </div>
+                                        }
                        
-                    </li>
+                                </li>
                 
               
-                }
-            </ul>
-
-            <input placeholder="Add todo" @bind="newTodo" />
-            <button @onclick="() => CreateItem(newTodo, Item.ToDoItem)">Add</button>
-        </td>
-
-        <td style="padding: 20px;">
-            <h2>Yapıyorum</h2>
-            <ul style="margin: 10px;">
-                @foreach (var item in DoingService.DoingItemDtos)
-                {
-
-
-                    <li style="margin-bottom: 5px;">
-                            <div>
-                                @item.Text
-                                <button class="btn btn-primary" @onclick="() => EditItem(item)"><i class="oi oi-pencil"></i></button>
-                                <button class="btn btn-danger" @onclick="() => DeleteItem(item)"><i class="oi oi-x"></i></button>
-                            
-                            </div>
-                        @if (item == editingItem)
-                            {
-                                <div>
-                                <input @bind="editingDoingText" />
-                                    <button @onclick="() => SaveItem(item)">Save</button>
-                                </div>
                             }
-                       
-                    </li>
-                
-                }
-            </ul>
+                        </ul>
+                        <div>
+                            <input placeholder="Add todo" @bind="newTodo" />
+                            <button @onclick="() => CreateItem(newTodo, Item.ToDoItem)">Add</button>
+                         </div>
+                 </div>
+            </td>
 
-            <input placeholder="Add Doing" @bind="newDoing" />
-            <button @onclick="() => CreateItem(newDoing, Item.DoingItem)">Add</button>
-        </td>
+            <td style="padding: 20px;">
+                <div class="list-section">
+                    <h2>Yapıyorum</h2>
+                        <ul style="margin: 10px;">
+                        @foreach (var item in DoingService.DoingItemDtos)
+                        {
 
-        <td style="padding: 20px;">
-            <h2>Yaptım</h2>
-            <ul style="margin: 10px;">
-                @foreach (var item in DoneService.DoneItemDtos)
-                {
 
-                    <li style="margin-bottom: 5px;">
-                            <div>
-                                @item.Text
-                                <button class="btn btn-primary" @onclick="() => EditItem(item)"><i class="oi oi-pencil"></i></button>
-                                <button class="btn btn-danger" @onclick="() => DeleteItem(item)"><i class="oi oi-x"></i></button>
+                            <li style="margin-bottom: 5px;">
+                                    <div>
+                                        @item.Text
+                                        <button class="btn btn-primary" @onclick="() => EditItem(item)"><i class="oi oi-pencil"></i></button>
+                                        <button class="btn btn-danger" @onclick="() => DeleteItem(item)"><i class="oi oi-x"></i></button>
                             
-                            </div>
-                        @if (item == editingItem)
-                            {
-                                <div>
-                                <input @bind="editingDoneText" />
-                                    <button @onclick="() => SaveItem(item)">Save</button>
-                                </div>
-                            }
+                                    </div>
+                                @if (item == editingItem)
+                                    {
+                                        <div>
+                                        <input @bind="editingDoingText" />
+                                            <button @onclick="() => SaveItem(item)">Save</button>
+                                        </div>
+                                    }
                        
-                    </li>
+                            </li>
+                
+                        }
+                    </ul>
+                    <div>
+                        <input placeholder="Add Doing" @bind="newDoing" />
+                        <button @onclick="() => CreateItem(newDoing, Item.DoingItem)">Add</button>
+                    </div>
+                </div>
+            </td>
+
+            <td style="padding: 20px;">
+                <div class="list-section">
+                    <h2>Yaptım</h2>
+                        <ul style="margin: 10px;">
+                        @foreach (var item in DoneService.DoneItemDtos)
+                        {
+
+                            <li style="margin-bottom: 5px;">
+                                    <div>
+                                        @item.Text
+                                        <button class="btn btn-primary" @onclick="() => EditItem(item)"><i class="oi oi-pencil"></i></button>
+                                        <button class="btn btn-danger" @onclick="() => DeleteItem(item)"><i class="oi oi-x"></i></button>
+                            
+                                    </div>
+                                @if (item == editingItem)
+                                    {
+                                        <div>
+                                        <input @bind="editingDoneText" />
+                                            <button @onclick="() => SaveItem(item)">Save</button>
+                                        </div>
+                                    }
+                       
+                            </li>
                 
 
 
-                }
-            </ul>
+                        }
+                    </ul>
+                    <div>
+                        <input placeholder="Add Done" @bind="newDone" />
+                        <button @onclick="() => CreateItem(newDone, Item.DoneItem)">Add</button>
+                    </div>
+                </div>
+            </td>
 
-            <input placeholder="Add Done" @bind="newDone" />
-            <button @onclick="() => CreateItem(newDone, Item.DoneItem)">Add</button>
-        </td>
+        </tr>
 
-    </tr>
+    </table>
 
+</div>
 
-</table>
 @code {
-    private string? newTodo;
-    private string? newDoing;
-    private string? newDone;
+    private string? newTodo = "";
+    private string? newDoing = "";
+    private string? newDone = "";
     private ItemDto? editingItem;
     private string editingToDoText = "";
     private string editingDoingText = "";
@@ -152,7 +199,7 @@ Welcome to your new app.
 
     private async void CreateItem(string? text, Item item)
     {
-        if (text != null)
+        if (text != "")
         {
             switch (item)
             {
@@ -174,6 +221,10 @@ Welcome to your new app.
 
             StateHasChanged();
 
+        }
+        else
+        {
+            return;
         }
     }
 
@@ -200,21 +251,21 @@ Welcome to your new app.
 
             case ToDoItemDto:
                 if (editingToDoText == "") return;
-                ItemDto itemdto = new ItemDto(editingToDoText, item.Id);
+                ItemDto itemdto = new ToDoItemDto(editingToDoText, item.Id);
                 await ToDoService.UpdateToDoItem(itemdto);
                 editingToDoText = "";
                 break;
 
             case DoingItemDto:
                 if (editingDoingText == "") return;
-                ItemDto itemdto2 = new ItemDto(editingDoingText, item.Id);
+                ItemDto itemdto2 = new DoingItemDto(editingDoingText, item.Id);
                 await DoingService.UpdateDoingItem(itemdto2);
                 editingDoingText = "";
                 break;
 
             case DoneItemDto:
                 if (editingDoneText == "") return;
-                ItemDto itemdto3 = new ItemDto(editingDoneText, item.Id);
+                ItemDto itemdto3 = new DoneItemDto(editingDoneText, item.Id);
                 await DoneService.UpdateDoneItem(itemdto3);
                 editingDoneText = "";
                 break;

@@ -33,7 +33,6 @@ namespace ToDoList.Services.ToDoServices
         {
             var _item = _mapper.Map<ToDoItem>(item);
             var result = await _http.PostAsJsonAsync("api/todo", _item);
-            //TODO: move these to a common method to avoid duplication
             var res = await result.Content.ReadFromJsonAsync<List<ToDoItem>>();
             if (res != null) ToDoItemDtos = _mapper.Map<List<ToDoItemDto>>(res); 
         }

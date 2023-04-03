@@ -1,6 +1,6 @@
 ﻿namespace ToDoList.DTO
 {
-    public class ItemDto
+    abstract public class ItemDto
     {
         public int Id { get; set; }
         public string Text { get; set; } = string.Empty;

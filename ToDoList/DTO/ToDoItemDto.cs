@@ -7,5 +7,9 @@
 
         }
 
+        public ToDoItemDto(string text, int id) : base(text, id)
+        {
+        }
+
     }
 }

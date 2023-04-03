@@ -5,6 +5,10 @@
         public DoingItemDto(string text) : base(text)
         {
         }
+
+        public DoingItemDto(string text, int id) : base(text, id)
+        {
+        }
     }
 
 }
