@@ -28,6 +28,7 @@ namespace ToDoList
             builder.Services.AddScoped<IToDoService, ToDoService>();
             builder.Services.AddScoped<IDoingService, DoingService>();
             builder.Services.AddScoped<IDoneService, DoneService>();
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
             var app = builder.Build();

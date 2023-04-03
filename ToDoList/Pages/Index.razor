@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using ToDoList.DTO;
 @using ToDoList.model;
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
 @inject IToDoService ToDoService
@@ -11,26 +12,26 @@
 
 Welcome to your new app.
 <table>
-    <div class="text-center">
+
     <tr>
         <td style="padding: 20px;">
             <h2>Yapacaklarım</h2>
             <ul style="margin: 10px;">
-                @foreach (var item in ToDoService.ToDoItems)
+                @foreach (var item in ToDoService.ToDoItemDtos)
                 {
 
                     <li style="margin-bottom: 5px;">
                             <div>
                                 @item.Text
-                                <button class="btn btn-primary" @onclick="() => EditToDoItem(item)"><i class="oi oi-pencil"></i></button>
-                                <button class="btn btn-danger" @onclick="() => DeleteToDoItem(item)"><i class="oi oi-x"></i></button>
+                                <button class="btn btn-primary" @onclick="() => EditItem(item)"><i class="oi oi-pencil"></i></button>
+                                <button class="btn btn-danger" @onclick="() => DeleteItem(item)"><i class="oi oi-x"></i></button>
                             
                             </div>
-                            @if (item == editingToDoItem)
+                        @if (item == editingItem)
                             {
                                 <div>
                                     <input @bind="editingToDoText" />
-                                    <button @onclick="() => SaveToDoItem(item)">Save</button>
+                                    <button @onclick="() => SaveItem(item)">Save</button>
                                 </div>
                             }
                        
@@ -41,28 +42,28 @@ Welcome to your new app.
             </ul>
 
             <input placeholder="Add todo" @bind="newTodo" />
-            <button @onclick="() => CreateTodo(newTodo)">Add</button>
+            <button @onclick="() => CreateItem(newTodo, Item.ToDoItem)">Add</button>
         </td>
 
         <td style="padding: 20px;">
             <h2>Yapıyorum</h2>
             <ul style="margin: 10px;">
-                @foreach (var item in DoingService.DoingItems)
+                @foreach (var item in DoingService.DoingItemDtos)
                 {
 
 
                     <li style="margin-bottom: 5px;">
                             <div>
                                 @item.Text
-                                <button class="btn btn-primary" @onclick="() => EditDoingItem(item)"><i class="oi oi-pencil"></i></button>
-                                <button class="btn btn-danger" @onclick="() => DeleteDoingItem(item)"><i class="oi oi-x"></i></button>
+                                <button class="btn btn-primary" @onclick="() => EditItem(item)"><i class="oi oi-pencil"></i></button>
+                                <button class="btn btn-danger" @onclick="() => DeleteItem(item)"><i class="oi oi-x"></i></button>
                             
                             </div>
-                            @if (item == editingDoingItem)
+                        @if (item == editingItem)
                             {
                                 <div>
                                 <input @bind="editingDoingText" />
-                                    <button @onclick="() => SaveDoingItem(item)">Save</button>
+                                    <button @onclick="() => SaveItem(item)">Save</button>
                                 </div>
                             }
                        
@@ -72,27 +73,27 @@ Welcome to your new app.
             </ul>
 
             <input placeholder="Add Doing" @bind="newDoing" />
-            <button @onclick="() => CreateDoing(newDoing)">Add</button>
+            <button @onclick="() => CreateItem(newDoing, Item.DoingItem)">Add</button>
         </td>
 
         <td style="padding: 20px;">
             <h2>Yaptım</h2>
             <ul style="margin: 10px;">
-                @foreach (var item in DoneService.DoneItems)
+                @foreach (var item in DoneService.DoneItemDtos)
                 {
 
                     <li style="margin-bottom: 5px;">
                             <div>
                                 @item.Text
-                                <button class="btn btn-primary" @onclick="() => EditDoneItem(item)"><i class="oi oi-pencil"></i></button>
-                                <button class="btn btn-danger" @onclick="() => DeleteDoneItem(item)"><i class="oi oi-x"></i></button>
+                                <button class="btn btn-primary" @onclick="() => EditItem(item)"><i class="oi oi-pencil"></i></button>
+                                <button class="btn btn-danger" @onclick="() => DeleteItem(item)"><i class="oi oi-x"></i></button>
                             
                             </div>
-                            @if (item == editingDoneItem)
+                        @if (item == editingItem)
                             {
                                 <div>
                                 <input @bind="editingDoneText" />
-                                    <button @onclick="() => SaveDoneItem(item)">Save</button>
+                                    <button @onclick="() => SaveItem(item)">Save</button>
                                 </div>
                             }
                        
@@ -104,20 +105,18 @@ Welcome to your new app.
             </ul>
 
             <input placeholder="Add Done" @bind="newDone" />
-            <button @onclick="() => CreateDone(newDone)">Add</button>
+            <button @onclick="() => CreateItem(newDone, Item.DoneItem)">Add</button>
         </td>
 
     </tr>
-    </div>
+
 
 </table>
 @code {
     private string? newTodo;
     private string? newDoing;
     private string? newDone;
-    private ToDoItem? editingToDoItem;
-    private DoingItem? editingDoingItem;
-    private DoneItem? editingDoneItem;
+    private ItemDto? editingItem;
     private string editingToDoText = "";
     private string editingDoingText = "";
     private string editingDoneText = "";
@@ -130,148 +129,99 @@ Welcome to your new app.
 
     }
 
-    private async void DeleteToDoItem(ToDoItem item)
+    private async void DeleteItem(ItemDto item)
     {
-
-        await ToDoService.DeleteToDoItem(item.Id);
-        StateHasChanged();
-
-    }
-
-    private async void DeleteDoingItem(DoingItem item)
-    {
-
-        await DoingService.DeleteDoingItem(item.Id);
-        StateHasChanged();
-
-    }
-
-    private async void DeleteDoneItem(DoneItem item)
-    {
-
-        await DoneService.DeleteDoneItem(item.Id);
-        StateHasChanged();
-
-    }
-
-    //TODO: find a way to make this generic
-    private async void CreateTodo(string? text)
-    {
-        if (text != null)
+        switch (item)
         {
-            await ToDoService.CreateToDoItem(new ToDoItem{Text = text});
-            newTodo = "";
-            StateHasChanged(); 
+            case ToDoItemDto:
+                await ToDoService.DeleteToDoItem(item.Id);
+                break;
 
+            case DoingItemDto:
+                await DoingService.DeleteDoingItem(item.Id);
+                break;
+
+            case DoneItemDto:
+                await DoneService.DeleteDoneItem(item.Id);
+                break;
         }
+
+        StateHasChanged();
+
     }
 
-    private async void CreateDoing(string? text)
+    private async void CreateItem(string? text, Item item)
     {
         if (text != null)
         {
-            await DoingService.CreateDoingItem(new DoingItem { Text = text });
-            newDoing = "";
+            switch (item)
+            {
+                case Item.ToDoItem:
+                    await ToDoService.CreateToDoItem(new ToDoItemDto(text));
+                    newTodo = "";
+                    break;
+
+                case Item.DoingItem:
+                    await DoingService.CreateDoingItem(new DoingItemDto(text));
+                    newDoing = "";
+                    break;
+
+                case Item.DoneItem:
+                    await DoneService.CreateDoneItem(new DoneItemDto(text));
+                    newDone = "";
+                    break;
+            }
+
             StateHasChanged();
 
         }
     }
 
-    private async void CreateDone(string? text)
+
+    private void EditItem(ItemDto item)
     {
-        if (text != null)
+        if (editingItem != null)
         {
-            await DoneService.CreateDoneItem(new DoneItem { Text = text });
-            newDone = "";
-            StateHasChanged();
+            SaveItem(editingItem);
 
         }
-    }
-
-    private void EditToDoItem(ToDoItem item)
-    {
-        if(editingToDoItem != null)
-        {
-            SaveToDoItem(editingToDoItem);
-
-        }
-        editingToDoItem = item;
-        editingToDoText = item.Text;
-    }
-
-    private void EditDoingItem(DoingItem item)
-    {
-        if (editingDoingItem != null)
-        {
-            SaveDoingItem(editingDoingItem);
-
-        }
-        editingDoingItem = item;
-        editingDoingText = item.Text;
-    }
-
-    private void EditDoneItem(DoneItem item)
-    {
-        if (editingDoneItem != null)
-        {
-            SaveDoneItem(editingDoneItem);
-
-        }
-        editingDoneItem = item;
-        editingDoneText = item.Text;
-    }
-
-    //TODO: find a way to make this generic now test this only for todo
-    private async void SaveToDoItem(ToDoItem item)
-    {
-        if(editingToDoText != "")
-        {
-            ToDoItem todoitem = new ToDoItem { Id = item.Id, Text = editingToDoText };
-            await ToDoService.UpdateToDoItem(todoitem);
-            editingToDoText = "";
-            editingToDoItem = null;
-            StateHasChanged();
-        }
-        else
-        {
-            return;
-        }
-
+        editingItem = item;
+        if (item is ToDoItemDto) editingToDoText = item.Text;
+        if (item is DoingItemDto) editingDoingText = item.Text;
+        if (item is DoneItemDto) editingDoneText = item.Text;
         
     }
 
-    private async void SaveDoingItem(DoingItem item)
+    private async void SaveItem(ItemDto item)
     {
-        if (editingDoingText != "")
+
+        switch (item)
         {
-            DoingItem doingitem = new DoingItem { Id = item.Id, Text = editingDoingText };
-            await DoingService.UpdateDoingItem(doingitem);
-            editingDoingText = "";
-            editingDoingItem = null;
+
+            case ToDoItemDto:
+                if (editingToDoText == "") return;
+                ItemDto itemdto = new ItemDto(editingToDoText, item.Id);
+                await ToDoService.UpdateToDoItem(itemdto);
+                editingToDoText = "";
+                break;
+
+            case DoingItemDto:
+                if (editingDoingText == "") return;
+                ItemDto itemdto2 = new ItemDto(editingDoingText, item.Id);
+                await DoingService.UpdateDoingItem(itemdto2);
+                editingDoingText = "";
+                break;
+
+            case DoneItemDto:
+                if (editingDoneText == "") return;
+                ItemDto itemdto3 = new ItemDto(editingDoneText, item.Id);
+                await DoneService.UpdateDoneItem(itemdto3);
+                editingDoneText = "";
+                break;
+            }
+
+            editingItem = null;
             StateHasChanged();
-        }
-        else
-        {
-            return;
-        }
-
-
-    }
-
-    private async void SaveDoneItem(DoneItem item)
-    {
-        if (editingDoneText != "")
-        {
-            DoneItem doneitem = new DoneItem { Id = item.Id, Text = editingDoneText };
-            await DoneService.UpdateDoneItem(doneitem);
-            editingDoneText = "";
-            editingDoneItem = null;
-            StateHasChanged();
-        }
-        else
-        {
-            return;
-        }
 
 
     }
