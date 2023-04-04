@@ -1,7 +1,7 @@
 # Blazor ToDo List App 
 A todo app made with .NET, Blazor and MSSQL Server(localdb).
 
-To Run The Project
+## To Run The Project
 1- Clone the repo
 ```sh
 git clone https://github.com/mehmetfatiherdem/ToDoListBlazor.git
