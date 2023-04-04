@@ -5,7 +5,6 @@ A todo app made with .NET, Blazor and MSSQL Server(localdb).
 1- Clone the repo
 ```sh
 git clone https://github.com/mehmetfatiherdem/ToDoListBlazor.git
-cd ToDoListBlazor
 ```
 2- Open the sln file with Visual Studio or Rider
 
